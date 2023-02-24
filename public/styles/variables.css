@@ -1,0 +1,10 @@
+:root {
+  --color-white: #fff;
+  --color-light-gray: #eee;
+  --color-blue: #377ae5;
+  --color-red: #ee4949;
+  --color-green: #55c955;
+
+  --header-shadow: 0 4px 4px rgb(0, 0, 0, 0.2);
+  --item-shadow: 0 4px 6px rgb(0, 0, 0, 0.2);
+}

@@ -2,6 +2,7 @@ export default {
   empty: { 'en': '', 'ua': '' },
   lang: { 'en': 'en', 'ua': 'юа' },
   noItemsInList: { 'en': 'There are no cities in this list yet', 'ua': 'У цьому списку поки що немає міст' },
+  enterCityName: { 'en': 'Enter city name', 'ua': 'Введіть назву міста' },
 
   temp: { 'en': 'temperature', 'ua': 'температура' },
   tabSearch: { 'en': 'Search', 'ua': 'Пошук' },

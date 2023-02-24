@@ -1,6 +1,6 @@
 <template>
   <label class="autocomplete">
-    <div class="autocomplete__text">Enter city</div>
+    <div class="autocomplete__text">{{ lang['enterCityName'][$store.state.lang] }}</div>
     <div class="autocomplete__input-wrapper">
       <input
           @input="inputName"
@@ -24,12 +24,14 @@
 
 <script>
 import {searchCities} from '@/services/weather'
+import lang from '@/services/lang'
 
 export default {
   data() {
     return {
       searchCities,
-      list: []
+      list: [],
+      lang
     }
   },
   methods: {

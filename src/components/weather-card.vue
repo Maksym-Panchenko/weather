@@ -38,6 +38,16 @@
       </div>
     </div>
 
+    <div class="card__button-group">
+      <custom-radio
+          v-for="(option, index) in options"
+          :key="index"
+          :value="option.value"
+          :label="option.caption"
+          v-model="selectedOption"
+      />
+    </div>
+
     <div class="card__graph">
       <canvas ref="chartCanvas"></canvas>
     </div>
@@ -49,12 +59,22 @@ import lang from '@/services/lang';
 import CustomAutocomplete from "@/components/custom-autocomplete";
 import {getInfoByCity} from "@/services/weather";
 import { Chart, LineElement, PointElement, LineController, CategoryScale, LinearScale } from 'chart.js';
+import CustomRadio from "@/components/custom-radio";
 
 Chart.register(LineElement, PointElement, LineController, CategoryScale, LinearScale);
 
 export default {
-  components: {CustomAutocomplete},
+  components: {CustomRadio, CustomAutocomplete},
   props: {
+    /**
+     * -- card has fields
+     * city {string}
+     * country {string}
+     * temp {number}
+     * weather {string} - may has diff lang
+     * weatherIcon {string} - name img file without extension
+     * graph { [{label: Date, value: float}] }
+     */
     card: {
       type: Object,
       required: true
@@ -68,10 +88,13 @@ export default {
     return {
       lang,
       currentCard: this.card,
+      options: [ { value: 'day', caption: 'Today'}, { value: 'full_day', caption: '24 hours'}, { value: 'week', caption: '5 day'} ],
+      selectedOption: 'full_day',
+
       chartData: {
-        labels: (this.card.graph ? this.card.graph.map(item => item.label.getHours() + ':00') : []),
+        labels: [],
         datasets: [{
-          data: (this.card.graph ? this.card.graph.map(item => item.value) : []),
+          data: [],
           backgroundColor: 'rgba(0, 0, 255, 0.5)',
           borderColor: 'blue',
           borderWidth: 1,
@@ -91,26 +114,64 @@ export default {
     },
     inFavorites() {
       return this.$store.getters.inFavorites({city: this.currentCard.city, country: this.currentCard.country});
+    },
+  },
+  watch: {
+    selectedOption() {
+      this.updateGraphData()
+      this.chart.update();
     }
   },
   methods: {
     updateCity(event) {
       // update card
       this.$store.commit('startLoad');
+
       getInfoByCity(event.cityName, event.countryName).then(res => {
         // update city
         this.currentCard = Object.assign(res[0], {graph: res[1]});
         this.$emit('replaceCity', this.currentCard);
         // update graph
-        this.chartData.datasets[0].data = [...res[1].map(e => e.value)];
-        this.chart.update();
+        this.updateGraphData();
 
+        this.chart.update();
         this.$store.commit('endLoad');
       })
     },
+
+    updateGraphData() {
+      let selectedTimes = []
+
+      if (this.currentCard.graph.length) {
+        switch (this.selectedOption) {
+          case 'day':
+            selectedTimes = this.currentCard.graph.filter(e => e.label.toDateString() === new Date().toDateString());
+            break;
+
+          case 'full_day':
+            selectedTimes = this.currentCard.graph.filter((e, i) => i < 8);
+            break;
+
+          case 'week':
+            selectedTimes = [...this.currentCard.graph];
+        }
+      }
+
+      let values = [];
+      let timeCaptions = [];
+      for (let item of selectedTimes) {
+        values.push(Math.round(item.value));
+        timeCaptions.push(item.label.getHours() + ':00');
+      }
+
+      this.chartData.datasets[0].data = [...values];
+      this.chartData.labels = [...timeCaptions];
+    },
+
     addCityToFavorite() {
       this.$store.commit('addToFavorite', this.currentCard)
     },
+
     removeCityFromFavorite(quietly) {
       if (quietly) {
         this.$store.commit('removeFromFavorite', {city: this.currentCard.city, country: this.currentCard.country})
@@ -118,9 +179,11 @@ export default {
         this.$emit('removeFavoriteCity');
       }
     },
+
     removeCityFromSearched() {
       this.$emit('removeCity');
     },
+
     renderChart() {
       if (!this.currentCard.graph) return;
       const ctx = this.$refs.chartCanvas.getContext('2d');
@@ -147,6 +210,7 @@ export default {
     }
   },
   mounted() {
+    this.updateGraphData();
     this.renderChart();
   },
 }
@@ -213,6 +277,12 @@ export default {
   box-shadow: inset 0 0.4rem 0.4rem rgba(0, 0, 0, 0.25);
 }
 
+.card__button-group {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
 @media (max-width: 1280px) {
   .card {
     margin: 0 0.4rem 0.8rem;
@@ -242,6 +312,11 @@ export default {
   .card__temp {
     font-size: 1.2rem;
   }
+}
 
+@media (max-width: 480px) {
+  .card__button-group {
+    flex-direction: column;
+  }
 }
 </style>

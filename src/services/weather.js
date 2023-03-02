@@ -40,10 +40,6 @@ function getDayInfo(url) {
         .map(e => ({
           value: e.main.temp,
           label: new Date(+(e.dt + '100'))}))
-        // TODO use it for today!
-        // .filter(e => e.label.toDateString() === new Date().toDateString())
-        // TEST for 8 first point
-        .filter((e, i) => i < 8)
       );
 }
 

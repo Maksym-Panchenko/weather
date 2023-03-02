@@ -84,8 +84,7 @@ export default {
   gap: 1rem;
 }
 
-@media (max-width: 640px) {
-
+@media (max-width: 640px) or (min-width: 1280px) {
   .card__header {
     flex-direction: column-reverse;
     align-items: flex-end;

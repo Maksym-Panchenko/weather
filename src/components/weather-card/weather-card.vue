@@ -184,6 +184,7 @@ export default {
 .card {
   display: flex;
   flex-direction: column;
+  width: calc(50% - 1rem);
   gap: 0.8rem;
   background-color: var(--color-white);
   box-shadow: var(--item-shadow);
@@ -196,7 +197,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-image: linear-gradient(-45deg, #79b1e4, #f9fbfd);
+  background-image: linear-gradient(-45deg, var(--color-light-blue), var(--color-extra-light-blue));
   padding: 1rem;
   border-radius: 1rem;
 }
@@ -234,6 +235,7 @@ export default {
 @media (max-width: 1280px) {
   .card {
     margin: 0 0.4rem 0.8rem;
+    width: 100%;
   }
 }
 

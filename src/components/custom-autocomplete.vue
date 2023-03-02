@@ -111,7 +111,7 @@ export default {
 
 }
 
-@media (max-width: 640px) {
+@media (max-width: 640px) or (min-width: 1280px) {
   .autocomplete {
     width: 100%;
     flex-direction: column;

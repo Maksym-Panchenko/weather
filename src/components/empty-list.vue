@@ -20,8 +20,9 @@ export default {
   .empty-block {
     display: flex;
     justify-content: center;
-    margin-bottom: 0.8rem;
     padding: 2rem;
+    margin: 0 0.4rem 0.8rem;
+    width: 100%;
 
     background-color: var(--color-white);
     border-radius: 0.8rem;

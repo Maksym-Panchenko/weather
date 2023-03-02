@@ -1,30 +1,12 @@
 <template>
   <div class="card">
-    <div v-if="mode === 'search'" class="card__header">
-      <CustomAutocomplete @updateCity="updateCity" />
-
-      <div class="card__actions">
-        <button v-if="inFavorites" @click="removeCityFromFavorite(true)" class="button button_icon button_small button_flat">
-          <img src="@/assets/img/star.svg" alt="Remove from favorite">
-        </button>
-
-        <button v-if="!inFavorites" @click="addCityToFavorite" class="button button_icon button_small button_flat">
-          <img src="@/assets/img/star-outline.svg" alt="Add to favorite">
-        </button>
-
-        <button @click="removeCityFromSearched" class="button button_icon button_small button_flat">
-          <img src="@/assets/img/close-black.svg" alt="Remove">
-        </button>
-      </div>
-    </div>
-
-    <div v-else class="card__header card__header_reverse">
-      <div class="card__actions">
-        <button @click="removeCityFromFavorite(false)" class="button button_icon button_small button_flat">
-          <img src="@/assets/img/close-black.svg" alt="Remove">
-        </button>
-      </div>
-    </div>
+    <CardHeader
+        @updateCity="updateCity"
+        @removeCity="$emit('removeCity')"
+        @removeFavoriteCity="$emit('removeFavoriteCity')"
+        :mode="mode"
+        :card="currentCard"
+    />
 
     <div class="card__data">
       <div class="card__column">
@@ -56,15 +38,15 @@
 
 <script>
 import lang from '@/services/lang';
-import CustomAutocomplete from "@/components/custom-autocomplete";
 import {getInfoByCity} from "@/services/weather";
 import { Chart, LineElement, PointElement, LineController, CategoryScale, LinearScale } from 'chart.js';
 import CustomRadio from "@/components/custom-radio";
+import CardHeader from "@/components/weather-card/card-header";
 
 Chart.register(LineElement, PointElement, LineController, CategoryScale, LinearScale);
 
 export default {
-  components: {CustomRadio, CustomAutocomplete},
+  components: {CustomRadio, CardHeader},
   props: {
     /**
      * -- card has fields
@@ -112,9 +94,7 @@ export default {
     currentLang() {
       return this.$store.state.lang;
     },
-    inFavorites() {
-      return this.$store.getters.inFavorites({city: this.currentCard.city, country: this.currentCard.country});
-    },
+
   },
   watch: {
     selectedOption() {
@@ -168,22 +148,6 @@ export default {
       this.chartData.labels = [...timeCaptions];
     },
 
-    addCityToFavorite() {
-      this.$store.commit('addToFavorite', this.currentCard)
-    },
-
-    removeCityFromFavorite(quietly) {
-      if (quietly) {
-        this.$store.commit('removeFromFavorite', {city: this.currentCard.city, country: this.currentCard.country})
-      } else {
-        this.$emit('removeFavoriteCity');
-      }
-    },
-
-    removeCityFromSearched() {
-      this.$emit('removeCity');
-    },
-
     renderChart() {
       if (!this.currentCard.graph) return;
       const ctx = this.$refs.chartCanvas.getContext('2d');
@@ -226,22 +190,6 @@ export default {
   padding: 2rem;
   border-radius: 0.8rem;
   margin-bottom: 0.8rem;
-}
-
-.card__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.card__header_reverse {
-  flex-direction: row-reverse;
-}
-
-.card__actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
 }
 
 .card__data {
@@ -292,12 +240,6 @@ export default {
 @media (max-width: 640px) {
   .card {
     padding: 0.8rem;
-  }
-
-  .card__header {
-    flex-direction: column-reverse;
-    align-items: flex-end;
-    gap: 0.4rem;
   }
 
   .card__data {

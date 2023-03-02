@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import WeatherCard from "@/components/weather-card";
+import WeatherCard from "@/components/weather-card/weather-card";
 import ModalConfirm from "@/components/modal-confirm";
 import lang from "@/services/lang";
 import EmptyList from "@/components/empty-list";

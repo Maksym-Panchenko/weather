@@ -124,7 +124,7 @@ export default {
     updateGraphData() {
       let selectedTimes = []
 
-      if (this.currentCard.graph.length) {
+      if (this.currentCard.graph?.length) {
         switch (this.selectedOption) {
           case 'day':
             selectedTimes = this.currentCard.graph.filter(e => e.label.toDateString() === new Date().toDateString());
@@ -203,7 +203,6 @@ export default {
   box-shadow: var(--item-shadow);
   padding: 2rem;
   border-radius: 0.8rem;
-  margin-bottom: 0.8rem;
 }
 
 .card__data {

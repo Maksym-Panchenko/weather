@@ -54,6 +54,7 @@ import WeatherCard from "@/components/weather-card/weather-card";
 import ModalConfirm from "@/components/modal-confirm";
 import tr from "@/services/lang";
 import EmptyList from "@/components/empty-list";
+import {showPosition} from "@/services/weather";
 
 export default {
   components: {EmptyList, ModalConfirm, WeatherCard},
@@ -68,17 +69,23 @@ export default {
   },
   methods: {
     async start() {
-      // add default city
-      if (!this.$store.state.searchedCites.length) {
-        this.$store.dispatch('addCityToSearched', this.defaultCity);
-      }
+      await this.addNewCity();
 
       // load favorite cities and data for there
-      this.$store.dispatch('loadFavorites');
+      await this.$store.dispatch('loadFavorites');
     },
 
-    addNewCity() {
-      this.$store.dispatch('addCityToSearched', this.defaultCity);
+    async addNewCity() {
+      // ask user position
+      if (navigator.geolocation) {
+        await navigator.geolocation.getCurrentPosition(
+            (position) => showPosition(position),
+            () => this.$store.dispatch('addCityToSearched', this.defaultCity)
+        );
+      } else {
+        console.log("Geolocation is not supported by this browser.");
+        await this.$store.dispatch('addCityToSearched', this.defaultCity);
+      }
     },
 
     removeCity(number) {

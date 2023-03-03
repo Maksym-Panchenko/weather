@@ -57,6 +57,7 @@ export default {
    max-width: calc(100% - 4rem);
    padding: 1.6rem 2rem;
 
+   border: 2px solid var(--color-bg-main);
    border-radius: 0.8rem;
    box-shadow: var(--item-shadow);
    color: var(--color-white);

@@ -57,7 +57,7 @@ export default {
  }
 
  .snackbar_success {
-   background-color: var(--color-green);
+   background-color: var(--color-primary);
  }
 
  .snackbar_error {

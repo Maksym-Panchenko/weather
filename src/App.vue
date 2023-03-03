@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{ 'dark-mode': $store.state.darkMode }">
     <CustomLoader />
     <MainHeader />
     <MainContent />
@@ -17,3 +17,10 @@ export default {
   components: {CustomLoader, CustomSnackbar, MainHeader, MainContent},
 }
 </script>
+
+<style scoped>
+  #app {
+    background-color: var(--color-bg-main);
+    min-height: 100vh;
+  }
+</style>

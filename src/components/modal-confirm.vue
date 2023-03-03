@@ -39,14 +39,16 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2;
+  z-index: 3;
+  backdrop-filter: blur(2px);
 }
 
 .modal-content {
   width: 30rem;
   max-width: 90%;
   padding: 2rem 4rem;
-  background-color: #fff;
+  background-color: var(--color-bg-main);
+  color: var(--color-text);
   border-radius: 5px;
   font-size: 1.2rem;
   text-align: center;

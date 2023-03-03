@@ -81,7 +81,7 @@ export default {
 .card__actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.4rem;
 }
 
 @media (max-width: 640px) or (min-width: 1280px) {

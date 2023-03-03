@@ -42,6 +42,8 @@ import {getInfoByCity} from "@/services/weather";
 import { Chart, LineElement, PointElement, LineController, CategoryScale, LinearScale } from 'chart.js';
 import CustomRadio from "@/components/custom-radio";
 import CardHeader from "@/components/weather-card/card-header";
+import Vue from "vue";
+import {eventBus} from "@/services/event-bus";
 
 Chart.register(LineElement, PointElement, LineController, CategoryScale, LinearScale);
 
@@ -77,8 +79,8 @@ export default {
         labels: [],
         datasets: [{
           data: [],
-          backgroundColor: 'rgba(0, 0, 255, 0.5)',
-          borderColor: 'blue',
+          backgroundColor: '#fff',
+          borderColor: '#6fbad3',
           borderWidth: 1,
           lineTension: 0.4,
         }]
@@ -146,6 +148,10 @@ export default {
 
       this.chartData.datasets[0].data = [...values];
       this.chartData.labels = [...timeCaptions];
+      // dark / light
+      this.chartData.datasets[0].backgroundColor = getComputedStyle(this.$el).getPropertyValue('--color-primary');
+      this.chartData.datasets[0].borderColor = getComputedStyle(this.$el).getPropertyValue('--color-primary');
+      console.log(getComputedStyle(this.$el).getPropertyValue('--color-primary'))
     },
 
     renderChart() {
@@ -174,8 +180,23 @@ export default {
     }
   },
   mounted() {
+
+
     this.updateGraphData();
     this.renderChart();
+
+    const vm = new Vue();
+    vm.$on('updateCardGraphColor', () => {
+      this.updateGraphData()
+    });
+
+    eventBus.$on('updateCardGraphColor', () => {
+      // Here we wait for the browser to update the value of the CSS variable
+      Vue.nextTick(() => {
+        this.updateGraphData();
+        this.chart.update();
+      })
+    });
   },
 }
 </script>
@@ -186,7 +207,7 @@ export default {
   flex-direction: column;
   width: calc(50% - 1rem);
   gap: 0.8rem;
-  background-color: var(--color-white);
+  background-color: var(--color-bg-card);
   box-shadow: var(--item-shadow);
   padding: 2rem;
   border-radius: 0.8rem;
@@ -200,6 +221,12 @@ export default {
   background-image: linear-gradient(-45deg, var(--color-light-blue), var(--color-extra-light-blue));
   padding: 1rem;
   border-radius: 1rem;
+  color: var(--color-text);
+}
+
+.dark-mode .card__data {
+  background-image: linear-gradient(-45deg, var(--color-dark-orange), var(--color-orange));
+
 }
 
 .card__city {
@@ -221,7 +248,7 @@ export default {
 
 .card__image {
   padding: 1rem;
-  background: var(--color-light-gray);
+  background: var(--color-semi-white);
   border-radius: 50%;
   box-shadow: inset 0 0.4rem 0.4rem rgba(0, 0, 0, 0.25);
 }

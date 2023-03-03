@@ -1,12 +1,14 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import {getInfoByCity} from "@/services/weather";
+import {eventBus} from "@/services/event-bus";
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
     lang: 'ua',
+    darkMode: false,
     favoriteCities: [],
     searchedCites: [],
 
@@ -98,8 +100,14 @@ const store = new Vuex.Store({
 
     updateSearchedList(state, list) {
       state.searchedCites = list;
-    }
+    },
 
+    changeMode(state) {
+      state.darkMode = !state.darkMode;
+      eventBus.$emit('updateCardGraphColor');
+      // TODO: save mode
+      // TODO: load mode
+    }
   },
   actions: {
     displaySnackbar({ commit }) {

@@ -8,9 +8,8 @@
           type="text"
           class="autocomplete__input" placeholder="..."
       >
-<!--      @blur="clearItems"-->
 
-      <ul class="autocomplete__list">
+      <ul @click="clearItems" class="autocomplete__list" :class="{autocomplete__list_open: list.length}">
         <li
             v-for="item in list"
             @click="selectCity(item)"
@@ -100,6 +99,13 @@ export default {
   box-shadow: var(--item-shadow);
   border-radius: 0.4rem;
   z-index: 3;
+}
+
+.autocomplete__list_open:after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
 }
 
 .autocomplete__list-item {

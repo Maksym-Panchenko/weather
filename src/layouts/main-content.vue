@@ -4,8 +4,12 @@
 
     <div class="content">
       <div class="content__tabs">
-        <button class="button" @click="selectTab('search')" :class="{ button_active: selectedTab === 'search' }">{{ lang['tabSearch'][$store.state.lang] }}</button>
-        <button class="button" @click="selectTab('favorite')" :class="{ button_active: selectedTab === 'favorite' }">{{ lang['tabFavorite'][$store.state.lang] }}</button>
+        <button class="button" @click="selectTab('search')" :class="{ button_active: selectedTab === 'search' }">
+          {{ tr('tabSearch') }}
+        </button>
+        <button class="button" @click="selectTab('favorite')" :class="{ button_active: selectedTab === 'favorite' }">
+          {{ tr('tabFavorite') }}
+        </button>
       </div>
 
       <div class="main__content" id="cards">
@@ -23,7 +27,7 @@
 
           <div class="main__action">
             <button class="button button_icon" @click="addNewCity">
-              <img src="@/assets/img/plus.svg" alt="Add">
+              <img src="@/assets/img/plus.svg" :alt="tr('altAdd')">
             </button>
           </div>
         </template>
@@ -46,16 +50,17 @@
 </template>
 
 <script>
-import WeatherCard from "@/components/weather-card";
+import WeatherCard from "@/components/weather-card/weather-card";
 import ModalConfirm from "@/components/modal-confirm";
-import lang from "@/services/lang";
+import tr from "@/services/lang";
 import EmptyList from "@/components/empty-list";
+import {showPosition} from "@/services/weather";
 
 export default {
   components: {EmptyList, ModalConfirm, WeatherCard},
   data() {
     return {
-      lang,
+      tr,
       defaultCity: { city: 'london', country: 'uk' },
       messageOptions: {},
       showModal: false,
@@ -64,17 +69,23 @@ export default {
   },
   methods: {
     async start() {
-      // add default city
-      if (!this.$store.state.searchedCites.length) {
-        this.$store.dispatch('addCityToSearched', this.defaultCity);
-      }
+      await this.addNewCity();
 
       // load favorite cities and data for there
-      this.$store.dispatch('loadFavorites');
+      await this.$store.dispatch('loadFavorites');
     },
 
-    addNewCity() {
-      this.$store.dispatch('addCityToSearched', this.defaultCity);
+    async addNewCity() {
+      // ask user position
+      if (navigator.geolocation) {
+        await navigator.geolocation.getCurrentPosition(
+            (position) => showPosition(position),
+            () => this.$store.dispatch('addCityToSearched', this.defaultCity)
+        );
+      } else {
+        console.log("Geolocation is not supported by this browser.");
+        await this.$store.dispatch('addCityToSearched', this.defaultCity);
+      }
     },
 
     removeCity(number) {

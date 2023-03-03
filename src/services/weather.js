@@ -40,10 +40,6 @@ function getDayInfo(url) {
         .map(e => ({
           value: e.main.temp,
           label: new Date(+(e.dt + '100'))}))
-        // TODO use it for today!
-        // .filter(e => e.label.toDateString() === new Date().toDateString())
-        // TEST for 8 first point
-        .filter((e, i) => i < 8)
       );
 }
 
@@ -52,4 +48,23 @@ export async function searchCities(value) {
   const response = await fetch(url);
   const data = await response.json();
   return data.list.map(city => ({ cityName: city.name, countryName: city.sys.country }));
+}
+
+export function showPosition(position) {
+  const lang = store.state.lang;
+  const lat = position.coords.latitude;
+  const lon = position.coords.longitude;
+  const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&lang=${lang}&units=${units}`;
+
+  fetch(apiUrl)
+    .then((response) => response.json())
+    .then(res => {
+      store.dispatch('addCityToSearched', {
+        city: res.name,
+        country: res.sys.country
+      });
+    })
+    .catch((error) => {
+      console.log("Error fetching weather data: ", error);
+    });
 }

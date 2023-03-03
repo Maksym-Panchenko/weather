@@ -1,19 +1,29 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{ 'dark-mode': $store.state.darkMode }">
     <CustomLoader />
     <MainHeader />
     <MainContent />
-    <CustomSnackbar />
+    <SnackbarList />
   </div>
 </template>
 
 <script>
 import MainHeader from "@/layouts/main-header";
 import MainContent from "@/layouts/main-content";
-import CustomSnackbar from "@/components/custom-snackbar";
 import CustomLoader from "@/components/custom-loader";
+import SnackbarList from "@/layouts/snackbar-list";
 export default {
   name: 'App',
-  components: {CustomLoader, CustomSnackbar, MainHeader, MainContent},
+  components: {CustomLoader, SnackbarList, MainHeader, MainContent},
+  created() {
+    this.$store.commit('loadSettings');
+  }
 }
 </script>
+
+<style scoped>
+  #app {
+    background-color: var(--color-bg-main);
+    min-height: 100vh;
+  }
+</style>

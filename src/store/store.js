@@ -12,14 +12,21 @@ const store = new Vuex.Store({
     favoriteCities: [],
     searchedCites: [],
 
-    showSnackbar: false,
-    statusSnackbar: 'success',
-    textSnackbar: 'empty',
-
+    snackbars: [],
     isLoading: false
   },
 
   mutations: {
+    addSnackbar(state, params) {
+      state.snackbars.push({
+        status: params.status,
+        text: params.text,
+        id: Math.floor(Math.random() * Date.now())
+      })
+    },
+    removeSnackbar(state, id) {
+      state.snackbars = state.snackbars.filter(e => e.id !== id);
+    },
     showSnackbar(state) {
       state.showSnackbar = true;
     },
@@ -30,16 +37,17 @@ const store = new Vuex.Store({
       if (state.favoriteCities.length < 5) {
         // add city
         state.favoriteCities.push(fullCityData);
-        state.textSnackbar = 'snackbarSuccessAddCity';
-        state.statusSnackbar = 'success';
-        store.dispatch('displaySnackbar');
-        // save to local storage
+        this.commit('addSnackbar', {
+          status: 'success',
+          text: 'snackbarSuccessAddCity'
+        });
         this.commit('saveFavorites');
 
       } else {
-        state.textSnackbar = 'snackbarErrorAddCity';
-        state.statusSnackbar = 'error';
-        store.dispatch('displaySnackbar');
+        this.commit('addSnackbar', {
+          status: 'error',
+          text: 'snackbarErrorAddCity'
+        })
       }
     },
 
@@ -47,9 +55,10 @@ const store = new Vuex.Store({
       const index = state.favoriteCities.findIndex(c => c.city === city.city && c.country === city.country);
       if (index >= 0) {
         state.favoriteCities.splice(index, 1);
-        state.textSnackbar = 'snackbarSuccessRemoveCity';
-        state.statusSnackbar = 'success';
-        store.dispatch('displaySnackbar');
+        this.commit('addSnackbar', {
+          status: 'success',
+          text: 'snackbarSuccessRemoveCity'
+        });
         // save to local storage
         this.commit('saveFavorites');
       }
@@ -124,9 +133,10 @@ const store = new Vuex.Store({
         commit('addCityToSearched', newCityData);
 
       } else {
-        state.textSnackbar = 'snackbarErrorAddCityToSelected';
-        state.statusSnackbar = 'error';
-        store.dispatch('displaySnackbar');
+        this.commit('addSnackbar', {
+          status: 'error',
+          text: 'snackbarErrorAddCityToSelected'
+        });
       }
     },
 

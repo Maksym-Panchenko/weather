@@ -151,7 +151,6 @@ export default {
       // dark / light
       this.chartData.datasets[0].backgroundColor = getComputedStyle(this.$el).getPropertyValue('--color-primary');
       this.chartData.datasets[0].borderColor = getComputedStyle(this.$el).getPropertyValue('--color-primary');
-      console.log(getComputedStyle(this.$el).getPropertyValue('--color-primary'))
     },
 
     renderChart() {

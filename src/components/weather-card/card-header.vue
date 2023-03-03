@@ -5,15 +5,15 @@
 
       <div class="card__actions">
         <button v-if="inFavorites()" @click="removeCityFromFavorite(true)" class="button button_icon button_small button_flat">
-          <img src="@/assets/img/star.svg" alt="Remove from favorite">
+          <img src="@/assets/img/star.svg" :alt="tr('altRemoveFromFavorite')">
         </button>
 
         <button v-if="!inFavorites()" @click="addCityToFavorite" class="button button_icon button_small button_flat">
-          <img src="@/assets/img/star-outline.svg" alt="Add to favorite">
+          <img src="@/assets/img/star-outline.svg" :alt="tr('altAddToFavorite')">
         </button>
 
         <button @click="removeCityFromSearched" class="button button_icon button_small button_flat">
-          <img src="@/assets/img/close-black.svg" alt="Remove">
+          <img src="@/assets/img/close-black.svg" :alt="tr('altRemove')">
         </button>
       </div>
     </template>
@@ -21,7 +21,7 @@
     <template v-else>
       <div class="card__actions">
         <button @click="removeCityFromFavorite(false)" class="button button_icon button_small button_flat">
-          <img src="@/assets/img/close-black.svg" alt="Remove">
+          <img src="@/assets/img/close-black.svg" :alt="tr('altRemove')">
         </button>
       </div>
     </template>
@@ -30,6 +30,7 @@
 
 <script>
 import CustomAutocomplete from "@/components/custom-autocomplete";
+import tr from "@/services/lang";
 
 export default {
   components: {CustomAutocomplete},
@@ -41,6 +42,11 @@ export default {
     card: {
       type: Object,
       required: true
+    }
+  },
+  data() {
+    return {
+      tr
     }
   },
   methods: {

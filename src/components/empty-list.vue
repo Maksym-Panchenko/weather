@@ -1,16 +1,16 @@
 <template>
   <div class="empty-block">
-    {{ list['noItemsInList'][$store.state.lang] }}
+    {{ tr('noItemsInList') }}
   </div>
 </template>
 
 <script>
-import list from '@/services/lang';
+import tr from '@/services/lang';
 
 export default {
   data() {
     return {
-      list
+      tr
     }
   }
 }

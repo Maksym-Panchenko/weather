@@ -1,9 +1,12 @@
 <template>
   <header class="header">
     <div class="header__content content">
-      <button @click="$store.commit('changeMode')" class="button button_icon button_flat button_small header__mode-button">
-        <img v-if="$store.state.darkMode" src="@/assets/img/moon.svg" alt="To Light" class="header__icon">
-        <img v-else src="@/assets/img/sun.svg" alt="To Dark" class="header__icon">
+      <button
+          @click="$store.commit('changeMode')"
+          class="button button_icon button_flat button_small header__mode-button"
+      >
+        <img v-if="$store.state.darkMode" src="@/assets/img/moon.svg" :alt="tr('altToLight')" class="header__icon">
+        <img v-else src="@/assets/img/sun.svg" :alt="tr('altToDark')" class="header__icon">
       </button>
 
       <a class="header__link" href="#">
@@ -11,19 +14,19 @@
       </a>
 
       <button @click="$store.dispatch('changeLang')" class="button button_icon button_flat button_small header__lang-button">
-        {{ lang['lang'][$store.state.lang] }}
+        {{ tr('lang') }}
       </button>
     </div>
   </header>
 </template>
 
 <script>
-import lang from '@/services/lang'
+import tr from '@/services/lang'
 
 export default {
   data() {
     return {
-      lang
+      tr
     }
   },
 }

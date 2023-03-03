@@ -7,17 +7,17 @@
         snackbar_hide: hidden,
       }"
   >
-    <div class="snackbar__text">{{ lang[param.text][$store.state.lang] }}</div>
+    <div class="snackbar__text">{{ tr(param.text) }}</div>
 
     <button class="snackbar__button">
-      <img @click="closeSnackbar" class="snackbar__image" src="@/assets/img/close.svg" alt="Weather">
+      <img @click="closeSnackbar" class="snackbar__image" src="@/assets/img/close.svg" :alt="tr('altWeather')">
     </button>
   </div>
 </template>
 
 <script>
 import {mapState} from "vuex";
-import lang from "@/services/lang";
+import tr from "@/services/lang";
 
 export default {
   props: {
@@ -28,7 +28,7 @@ export default {
   },
   data() {
     return {
-      lang,
+      tr,
       hidden: false
     }
   },

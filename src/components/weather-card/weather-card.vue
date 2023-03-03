@@ -11,12 +11,12 @@
     <div class="card__data">
       <div class="card__column">
         <div class="card__city">{{ card.city }} ({{ card.country }})</div>
-        <div v-if="card.temp !== undefined" class="card__temp">{{ lang.temp[currentLang] }} {{ card.temp }}&deg;C</div>
+        <div v-if="card.temp !== undefined" class="card__temp">{{ tr('temp') }} {{ card.temp }}&deg;C</div>
         <div v-if="card.weather" class="card__weather">({{ card.weather }})</div>
       </div>
 
       <div v-if="this.currentCard.weatherIcon" class="card__column">
-        <img class="card__image" :src="imgSrc" alt="Weather">
+        <img class="card__image" :src="imgSrc" :alt="tr('altWeather')">
       </div>
     </div>
 
@@ -25,7 +25,7 @@
           v-for="(option, index) in options"
           :key="index"
           :value="option.value"
-          :label="option.caption"
+          :label="tr(option.caption)"
           v-model="selectedOption"
       />
     </div>
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import lang from '@/services/lang';
+import tr from '@/services/lang';
 import {getInfoByCity} from "@/services/weather";
 import { Chart, LineElement, PointElement, LineController, CategoryScale, LinearScale } from 'chart.js';
 import CustomRadio from "@/components/custom-radio";
@@ -70,9 +70,13 @@ export default {
   },
   data() {
     return {
-      lang,
+      tr,
       currentCard: this.card,
-      options: [ { value: 'day', caption: 'Today'}, { value: 'full_day', caption: '24 hours'}, { value: 'week', caption: '5 day'} ],
+      options: [
+        { value: 'day', caption: 'buttonToday'},
+        { value: 'full_day', caption: 'button24Hours'},
+        { value: 'week', caption: 'button5Days'}
+      ],
       selectedOption: 'full_day',
 
       chartData: {
@@ -93,10 +97,6 @@ export default {
         ? `https://openweathermap.org/img/w/${ this.currentCard.weatherIcon }.png`
         : '');
     },
-    currentLang() {
-      return this.$store.state.lang;
-    },
-
   },
   watch: {
     selectedOption() {
@@ -179,15 +179,8 @@ export default {
     }
   },
   mounted() {
-
-
     this.updateGraphData();
     this.renderChart();
-
-    const vm = new Vue();
-    vm.$on('updateCardGraphColor', () => {
-      this.updateGraphData()
-    });
 
     eventBus.$on('updateCardGraphColor', () => {
       // Here we wait for the browser to update the value of the CSS variable

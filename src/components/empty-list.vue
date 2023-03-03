@@ -1,16 +1,16 @@
 <template>
   <div class="empty-block">
-    {{ list['noItemsInList'][$store.state.lang] }}
+    {{ tr('noItemsInList') }}
   </div>
 </template>
 
 <script>
-import list from '@/services/lang';
+import tr from '@/services/lang';
 
 export default {
   data() {
     return {
-      list
+      tr
     }
   }
 }
@@ -20,10 +20,12 @@ export default {
   .empty-block {
     display: flex;
     justify-content: center;
-    margin-bottom: 0.8rem;
     padding: 2rem;
+    margin: 0 0.4rem 0.8rem;
+    width: 100%;
 
-    background-color: var(--color-white);
+    background-color: var(--color-bg-card);
+    color: var(--color-text);
     border-radius: 0.8rem;
     box-shadow: var(--item-shadow);
     font-size: 1.2rem;

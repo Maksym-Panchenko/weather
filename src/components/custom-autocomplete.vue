@@ -1,6 +1,6 @@
 <template>
   <label class="autocomplete">
-    <div class="autocomplete__text">{{ lang['enterCityName'][$store.state.lang] }}</div>
+    <div class="autocomplete__text">{{ tr('enterCityName') }}</div>
     <div class="autocomplete__input-wrapper">
       <input
           @input="inputName"
@@ -8,9 +8,8 @@
           type="text"
           class="autocomplete__input" placeholder="..."
       >
-<!--      @blur="clearItems"-->
 
-      <ul class="autocomplete__list">
+      <ul @click="clearItems" class="autocomplete__list" :class="{autocomplete__list_open: list.length}">
         <li
             v-for="item in list"
             @click="selectCity(item)"
@@ -24,14 +23,14 @@
 
 <script>
 import {searchCities} from '@/services/weather'
-import lang from '@/services/lang'
+import tr from '@/services/lang'
 
 export default {
   data() {
     return {
       searchCities,
       list: [],
-      lang
+      tr
     }
   },
   methods: {
@@ -71,11 +70,13 @@ export default {
   justify-content: center;
   align-items: center;
   padding: 0 0.8rem;
+  color: var(--color-text);
 }
 
 .autocomplete__input-wrapper {
   position: relative;
-  box-shadow: var(--item-shadow);
+  border-radius: 0.4rem;
+  border: 1px solid var(--color-primary);
 }
 
 .autocomplete__input {
@@ -83,15 +84,28 @@ export default {
   border: 0;
   outline: 0;
   padding: 0.4rem 0.8rem;
+  border-radius: 0.4rem;
+  background-color: var(--color-bg-main);
+  color: var(--color-text);
 }
 
 .autocomplete__list {
   position: absolute;
   top: calc(100% + 0.4rem);
-  background: var(--color-white);
+  background: var(--color-bg-main);
+  color: var(--color-text);
   left: 0;
   width: 100%;
   box-shadow: var(--item-shadow);
+  border-radius: 0.4rem;
+  z-index: 3;
+}
+
+.autocomplete__list_open:after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
 }
 
 .autocomplete__list-item {
@@ -100,18 +114,27 @@ export default {
   cursor: pointer;
   transition: background-color 0.3s;
   font-weight: 300;
+  border: 1px solid var(--color-primary);
+  border-width: 0 1px;
+}
+
+.autocomplete__list-item:first-child {
+  border-top-left-radius: 0.4rem;
+  border-top-right-radius: 0.4rem;
+  border-top: 1px solid var(--color-primary)
+}
+
+.autocomplete__list-item:last-child {
+  border-bottom-left-radius: 0.4rem;
+  border-bottom-right-radius: 0.4rem;
+  border-bottom: 1px solid var(--color-primary)
 }
 
 .autocomplete__list-item:hover {
-  background-color: var(--color-light-gray);
+  color: var(--color-primary);
 }
 
-.autocomplete__list-item:not(:last-child) {
-  border-bottom: 1px solid var(--color-light-gray);
-
-}
-
-@media (max-width: 640px) {
+@media (max-width: 640px) or (min-width: 1280px) {
   .autocomplete {
     width: 100%;
     flex-direction: column;

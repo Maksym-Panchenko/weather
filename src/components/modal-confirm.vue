@@ -3,15 +3,15 @@
     <div class="modal-content">
       <p>{{ message }}</p>
       <div class="modal-buttons">
-        <button class="button" @click="$emit('closeModal')">{{ lang['modalButtonCancel'][$store.state.lang] }}</button>
-        <button class="button" @click="messageOptions.confirm()">{{ lang['modalButtonAgree'][$store.state.lang] }}</button>
+        <button class="button" @click="$emit('closeModal')">{{ tr('modalButtonCancel') }}</button>
+        <button class="button" @click="messageOptions.confirm()">{{ tr('modalButtonAgree') }}</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import lang from '@/services/lang';
+import tr from '@/services/lang';
 
 export default {
   props: {
@@ -20,12 +20,12 @@ export default {
   },
   data() {
     return {
-      lang
+      tr
     };
   },
   computed: {
     message() {
-      return this.messageOptions.message ? this.lang[this.messageOptions.message][this.$store.state.lang] : '';
+      return this.messageOptions.message ? this.tr(this.messageOptions.message) : '';
     }
   },
 }
@@ -39,14 +39,16 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2;
+  z-index: 3;
+  backdrop-filter: blur(2px);
 }
 
 .modal-content {
   width: 30rem;
   max-width: 90%;
   padding: 2rem 4rem;
-  background-color: #fff;
+  background-color: var(--color-bg-main);
+  color: var(--color-text);
   border-radius: 5px;
   font-size: 1.2rem;
   text-align: center;

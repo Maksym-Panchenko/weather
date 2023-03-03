@@ -15,6 +15,9 @@ import SnackbarList from "@/layouts/snackbar-list";
 export default {
   name: 'App',
   components: {CustomLoader, SnackbarList, MainHeader, MainContent},
+  created() {
+    this.$store.commit('loadSettings');
+  }
 }
 </script>
 

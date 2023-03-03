@@ -101,6 +101,7 @@ const store = new Vuex.Store({
 
     switchLang(state) {
       state.lang = state.lang === 'ua' ? 'en' : 'ua';
+      this.commit('saveSettings');
     },
 
     updateFavoriteList(state, list) {
@@ -114,8 +115,20 @@ const store = new Vuex.Store({
     changeMode(state) {
       state.darkMode = !state.darkMode;
       eventBus.$emit('updateCardGraphColor');
-      // TODO: save mode
-      // TODO: load mode
+      this.commit('saveSettings');
+    },
+
+    saveSettings(state) {
+      localStorage.setItem('settings', JSON.stringify({'lang': state.lang, 'darkMode': state.darkMode}));
+    },
+
+    loadSettings(state) {
+      const settings = localStorage.getItem('settings');
+      if (settings) {
+        const settingsValue = JSON.parse(settings);
+        state.lang = settingsValue.lang;
+        state.darkMode = settingsValue.darkMode;
+      }
     }
   },
   actions: {
